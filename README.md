@@ -1,6 +1,6 @@
 # Claude Fork
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/user/claude-fork)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/enruana/claude-fork)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Bash](https://img.shields.io/badge/bash-4.0%2B-orange.svg)](https://www.gnu.org/software/bash/)
 
@@ -21,13 +21,13 @@ Claude Fork is a CLI tool that allows you to create "branches" of your Claude Co
 ### One-Line Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/user/claude-fork/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/enruana/claude-fork/main/install.sh | bash
 ```
 
 ### Manual Installation
 
 ```bash
-git clone https://github.com/user/claude-fork.git
+git clone https://github.com/enruana/claude-fork.git
 cd claude-fork
 make install
 ```
@@ -300,7 +300,7 @@ make dev-test  # With debug output
 
 ### Build from Source
 ```bash
-git clone https://github.com/user/claude-fork.git
+git clone https://github.com/enruana/claude-fork.git
 cd claude-fork
 make install
 ```
@@ -364,7 +364,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ### Development Setup
 ```bash
-git clone https://github.com/user/claude-fork.git
+git clone https://github.com/enruana/claude-fork.git
 cd claude-fork
 make dev-install
 make dev-test
@@ -436,8 +436,8 @@ make dev-test
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/user/claude-fork)
-- [Issue Tracker](https://github.com/user/claude-fork/issues)
+- [GitHub Repository](https://github.com/enruana/claude-fork)
+- [Issue Tracker](https://github.com/enruana/claude-fork/issues)
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
 
 ---

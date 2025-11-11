@@ -292,7 +292,7 @@ Slash Commands (for use in Claude Code):
   /merge <name>       - Execute: claude-fork merge <name>
   /forks              - Execute: claude-fork list
 
-For more information, visit: https://github.com/USER/claude-fork
+For more information, visit: https://github.com/enruana/claude-fork
 EOF
 }
 
