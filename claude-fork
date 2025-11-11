@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIB_DIR="$SCRIPT_DIR/lib"
+
+if [[ ! -f "$LIB_DIR/utils.sh" ]]; then
+    echo "Error: Cannot find utils.sh in $LIB_DIR" >&2
+    exit 1
+fi
+
+source "$LIB_DIR/utils.sh"
+
+main() {
+    local command="${1:-new}"
+    
+    case "$command" in
+        new)
+            shift
+            exec "$LIB_DIR/new.sh" "$@"
+            ;;
+        export)
+            shift
+            exec "$LIB_DIR/export.sh" "$@"
+            ;;
+        list)
+            shift
+            exec "$LIB_DIR/list.sh" "$@"
+            ;;
+        merge)
+            shift
+            exec "$LIB_DIR/merge.sh" "$@"
+            ;;
+        clean)
+            shift
+            exec "$LIB_DIR/clean.sh" "$@"
+            ;;
+        help|-h|--help)
+            show_help
+            ;;
+        version|-v|--version)
+            show_version
+            ;;
+        *)
+            log_error "Unknown command: $command"
+            echo ""
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+check_dependencies
+init_data_dir
+
+main "$@"
