@@ -79,6 +79,7 @@ install_claude_fork() {
     local bin_dir="$prefix/bin"
     local lib_dir="$prefix/lib/claude-fork"
     local claude_commands_dir="$HOME/.claude/commands"
+    local claude_agents_dir="$HOME/.claude/agents"
     
     log_info "Installing Claude Fork v$VERSION"
     echo ""
@@ -87,6 +88,7 @@ install_claude_fork() {
     echo "  📂 Binary: $bin_dir"
     echo "  📂 Library: $lib_dir"
     echo "  📂 Commands: $claude_commands_dir"
+    echo "  📂 Agents: $claude_agents_dir"
     echo ""
     
     mkdir -p "$bin_dir" || error_exit "Failed to create bin directory: $bin_dir"
@@ -103,6 +105,7 @@ install_claude_fork() {
     log_success "Claude Fork installed successfully!"
     
     install_slash_commands "$claude_commands_dir"
+    install_agents "$claude_agents_dir"
     
     check_path "$bin_dir"
     
@@ -115,10 +118,15 @@ install_claude_fork() {
     echo "  claude-fork help                 # Show all commands"
     echo ""
     echo "Slash commands (in Claude Code):"
-    echo "  /fork [name]                     # Create fork"
-    echo "  /export [name]                   # Export context"
-    echo "  /merge <name>                    # Import context"
-    echo "  /forks                           # List status"
+    echo "  /cf/fork [name]                  # Create fork"
+    echo "  /cf/export [name]                # Export context"
+    echo "  /cf/merge <name>                 # Import context"
+    echo "  /cf/forks                        # List status"
+    echo "  /cf/clean                        # Clean data"
+    echo "  /cf/show <name>                  # Show details"
+    echo ""
+    echo "Agent available:"
+    echo "  export-specialist              # Expert fork management"
 }
 
 install_slash_commands() {
@@ -135,13 +143,48 @@ install_slash_commands() {
     
     log_info "Installing slash commands..."
     
-    cp -r "$SCRIPT_DIR/templates/slash-commands"/* "$claude_commands_dir/" || {
-        log_warning "Failed to install slash commands"
-        log_warning "Manual installation: cp templates/slash-commands/* ~/.claude/commands/"
+    # Create cf subdirectory in commands
+    mkdir -p "$claude_commands_dir/cf" || {
+        log_warning "Failed to create cf subdirectory"
         return 0
     }
     
-    log_success "Slash commands installed"
+    # Copy cf commands to subdirectory
+    cp -r "$SCRIPT_DIR/templates/commands/cf"/* "$claude_commands_dir/cf/" || {
+        log_warning "Failed to install cf slash commands"
+        log_warning "Manual installation: cp templates/commands/cf/* ~/.claude/commands/cf/"
+        return 0
+    }
+    
+    log_success "Slash commands installed in /cf/ namespace"
+}
+
+install_agents() {
+    local claude_agents_dir="$1"
+    
+    if [[ ! -d "$SCRIPT_DIR/templates/agents" ]]; then
+        log_warning "No agents directory found, skipping agent installation"
+        return 0
+    fi
+    
+    if [[ ! -d "$claude_agents_dir" ]]; then
+        log_info "Creating Claude agents directory: $claude_agents_dir"
+        mkdir -p "$claude_agents_dir" || {
+            log_warning "Failed to create Claude agents directory"
+            log_warning "Agents will not be available"
+            return 0
+        }
+    fi
+    
+    log_info "Installing Claude Fork agents..."
+    
+    cp -r "$SCRIPT_DIR/templates/agents"/* "$claude_agents_dir/" || {
+        log_warning "Failed to install agents"
+        log_warning "Manual installation: cp templates/agents/* ~/.claude/agents/"
+        return 0
+    }
+    
+    log_success "Export Specialist agent installed"
 }
 
 check_path() {

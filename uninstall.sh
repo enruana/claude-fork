@@ -36,7 +36,7 @@ uninstall_claude_fork() {
     local bin_dir="$prefix/bin"
     local lib_dir="$prefix/lib/claude-fork"
     local claude_commands_dir="$HOME/.claude/commands"
-    local data_dir="$HOME/.claude-forks"
+    local legacy_data_dir="$HOME/.claude-forks"  # Legacy global data directory
     
     echo "🗑️  Claude Fork Uninstaller v$VERSION"
     echo "====================================="
@@ -50,7 +50,7 @@ uninstall_claude_fork() {
     echo "  📂 $claude_commands_dir/{fork,export,merge,forks}.md"
     echo ""
     echo "User data (will ask separately):"
-    echo "  📂 $data_dir/"
+    echo "  📂 $legacy_data_dir/ (legacy global data)"
     echo ""
     
     read -p "Continue with uninstallation? (y/N): " -n 1 -r
@@ -89,9 +89,9 @@ uninstall_claude_fork() {
         log_warning "No slash commands found to remove"
     fi
     
-    if [[ -d "$data_dir" ]]; then
+    if [[ -d "$legacy_data_dir" ]]; then
         echo ""
-        log_warning "User data found at: $data_dir"
+        log_warning "Legacy user data found at: $legacy_data_dir"
         echo ""
         echo "This contains:"
         echo "  • Fork database (forks.json)"
@@ -101,9 +101,9 @@ uninstall_claude_fork() {
         echo
         
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            rm -rf "$data_dir" && log_success "Removed user data directory"
+            rm -rf "$legacy_data_dir" && log_success "Removed legacy user data directory"
         else
-            log_info "User data preserved at: $data_dir"
+            log_info "Legacy user data preserved at: $legacy_data_dir"
         fi
     fi
     
@@ -112,12 +112,14 @@ uninstall_claude_fork() {
     echo ""
     echo "Thank you for using Claude Fork!"
     
-    if [[ -d "$data_dir" ]]; then
+    if [[ -d "$legacy_data_dir" ]]; then
         echo ""
-        echo "Note: User data preserved at $data_dir"
+        echo "Note: Legacy user data preserved at $legacy_data_dir"
         echo "You can manually remove it later if needed:"
-        echo "  rm -rf \"$data_dir\""
+        echo "  rm -rf \"$legacy_data_dir\""
     fi
+    echo ""
+    echo "💡 Note: Claude Fork now stores data locally per project in .claude/.claude-fork/"
 }
 
 main() {

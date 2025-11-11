@@ -87,7 +87,7 @@ test_data_dir_creation() {
     
     "$CLAUDE_FORK" list > /dev/null
     
-    if [[ -d "$HOME/.claude-forks" ]] && [[ -f "$HOME/.claude-forks/forks.json" ]]; then
+    if [[ -d ".claude/.claude-fork" ]] && [[ -f ".claude/.claude-fork/forks.json" ]]; then
         log_pass "Data directory created successfully"
     else
         log_fail "Data directory creation failed"
@@ -130,14 +130,14 @@ test_export_basic() {
     
     echo "Test export content" | "$CLAUDE_FORK" export test-export > /dev/null
     
-    if [[ -f "$HOME/.claude-forks/exports/test-export.md" ]]; then
+    if [[ -f ".claude/.claude-fork/exports/test-export.md" ]]; then
         log_pass "Export file created successfully"
     else
         log_fail "Export file not created"
         return 1
     fi
     
-    if grep -q "Test export content" "$HOME/.claude-forks/exports/test-export.md"; then
+    if grep -q "Test export content" ".claude/.claude-fork/exports/test-export.md"; then
         log_pass "Export content saved correctly"
     else
         log_fail "Export content not saved correctly"
@@ -167,7 +167,7 @@ test_list_with_exports() {
     cd "$TEST_DATA_DIR"
     
     # The export should already exist from the previous test
-    if [[ -f "$HOME/.claude-forks/exports/test-export.md" ]]; then
+    if [[ -f ".claude/.claude-fork/exports/test-export.md" ]]; then
         local output
         output=$("$CLAUDE_FORK" list 2>/dev/null | grep -v "ℹ️")
         

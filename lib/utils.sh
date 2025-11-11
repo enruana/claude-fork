@@ -10,7 +10,13 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-DATA_DIR="$HOME/.claude-forks"
+# Use project-local directory instead of global
+get_project_claude_fork_dir() {
+    local current_dir="$(pwd)"
+    echo "$current_dir/.claude/.claude-fork"
+}
+
+DATA_DIR="$(get_project_claude_fork_dir)"
 FORKS_DB="$DATA_DIR/forks.json"
 EXPORTS_DIR="$DATA_DIR/exports"
 

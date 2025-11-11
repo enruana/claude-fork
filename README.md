@@ -190,7 +190,7 @@ After installation, Claude Fork creates:
 ├── merge.md
 └── forks.md
 
-~/.claude-forks/            # User data
+.claude/.claude-fork/        # Project-local data
 ├── forks.json              # Fork database
 └── exports/                # Exported contexts
     ├── solution-1.md
@@ -237,13 +237,13 @@ claude-fork export test-case --manual    # Manual content entry
 
 **View available exports:**
 ```bash
-ls ~/.claude-forks/exports/
+ls .claude/.claude-fork/exports/
 claude-fork list    # Shows exports with metadata
 ```
 
 **Manually edit exports:**
 ```bash
-$EDITOR ~/.claude-forks/exports/solution-found.md
+$EDITOR .claude/.claude-fork/exports/solution-found.md
 ```
 
 #### Export Features

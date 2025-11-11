@@ -23,7 +23,7 @@ uninstall: ## Uninstall claude-fork
 install-commands: ## Install slash commands only
 	@echo "Installing slash commands..."
 	@mkdir -p "$(CLAUDE_COMMANDS_DIR)"
-	@cp -r templates/slash-commands/* "$(CLAUDE_COMMANDS_DIR)/"
+	@cp -r templates/commands/* "$(CLAUDE_COMMANDS_DIR)/"
 	@echo "✅ Slash commands installed to $(CLAUDE_COMMANDS_DIR)"
 
 test: ## Run basic tests
