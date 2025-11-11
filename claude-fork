@@ -37,6 +37,10 @@ main() {
             shift
             exec "$LIB_DIR/export.sh" "$@"
             ;;
+        export-auto)
+            shift
+            exec "$LIB_DIR/export-auto.sh" "$@"
+            ;;
         list)
             shift
             exec "$LIB_DIR/list.sh" "$@"
@@ -48,6 +52,10 @@ main() {
         clean)
             shift
             exec "$LIB_DIR/clean.sh" "$@"
+            ;;
+        show)
+            shift
+            exec "$LIB_DIR/show.sh" "$@"
             ;;
         help|-h|--help)
             show_help

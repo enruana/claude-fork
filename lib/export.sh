@@ -5,6 +5,37 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/utils.sh"
 
+generate_export_prompt() {
+    local export_name="$1"
+    local current_dir="$2"
+    
+    cat << EOF
+Please create a structured export summary for this Claude Fork session.
+
+**Export Name:** $export_name
+**Working Directory:** $current_dir
+
+Analyze our recent conversation and create a comprehensive export with these sections:
+
+## Summary
+Brief overview of what was accomplished or discussed in this fork
+
+## Key Insights  
+Important findings, decisions, or learnings from our work
+
+## Technical Details
+Code changes, commands, or technical solutions we implemented
+
+## Outcomes
+Results achieved or next steps identified
+
+## Recommendations
+Suggestions for the main conversation based on this fork's work
+
+Format as clear markdown. Focus on actionable insights and concrete results from our actual conversation in this fork.
+EOF
+}
+
 export_context() {
     local export_name="${1:-}"
     local current_dir
@@ -32,14 +63,53 @@ export_context() {
     
     log_info "📤 Creating export: $export_name"
     echo ""
-    echo "Enter your export content (summary/results from this fork):"
-    echo "Type your content and press Ctrl+D when finished:"
-    echo "----------------------------------------"
     
-    content="$(cat)"
+    # Check for different modes
+    local save_content=""
+    local manual_mode=false
     
-    if [[ -z "$content" ]]; then
-        error_exit "No content provided for export"
+    # Parse arguments for --save-content
+    for arg in "$@"; do
+        if [[ "$arg" == "--manual" ]]; then
+            manual_mode=true
+        elif [[ "$arg" == --save-content=* ]]; then
+            save_content="${arg#--save-content=}"
+        fi
+    done
+    
+    if [[ -n "$save_content" ]]; then
+        # Save content mode: content provided as argument
+        content="$save_content"
+        log_success "📝 Content provided via --save-content"
+    elif [[ "$manual_mode" == true ]]; then
+        # Manual entry mode
+        log_info "Manual content entry mode"
+        echo "Enter your export content (summary/results from this fork):"
+        echo "Type your content and press Ctrl+D when finished:"
+        echo "----------------------------------------"
+        content="$(cat)"
+        
+        if [[ -z "$content" ]]; then
+            error_exit "No content provided for export"
+        fi
+    else
+        # Interactive mode: show prompt and wait for input
+        log_info "📝 Two-phase export for: $export_name"
+        echo ""
+        echo "STEP 1: Copy this prompt and ask Claude to create the export summary:"
+        echo ""
+        echo "$(generate_export_prompt "$export_name" "$current_dir")"
+        echo ""
+        echo "STEP 2: Paste Claude's response below and press Ctrl+D:"
+        echo "----------------------------------------"
+        
+        content="$(cat)"
+        
+        if [[ -z "$content" ]]; then
+            error_exit "No content provided for export"
+        fi
+        
+        log_success "📝 Export content provided"
     fi
     
     cat > "$export_file" << EOF
@@ -64,7 +134,7 @@ EOF
     echo ""
     echo "Next steps:"
     echo "  • Use 'claude-fork merge $export_name' in your main conversation"
-    echo "  • Or use the slash command: /merge $export_name"
+    echo "  • Or use the slash command: cf:merge $export_name"
 }
 
 main() {

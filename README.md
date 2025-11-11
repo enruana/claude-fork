@@ -11,10 +11,11 @@ Claude Fork is a CLI tool that allows you to create "branches" of your Claude Co
 ## ✨ Features
 
 - 🔀 **Fork Creation**: Spin up new Claude Code instances in separate terminals
-- 📤 **Context Export**: Save results and insights from successful forks
+- 📤 **Smart Export**: Auto-generate export summaries using Claude AI
 - 📥 **Context Import**: Merge fork results back to your main conversation
 - 📋 **Status Management**: Track active forks and available exports
 - 🎯 **Claude Code Integration**: Native slash commands (`/fork`, `/export`, `/merge`)
+- 🤖 **AI-Powered**: Intelligent conversation analysis and summarization
 
 ## 🚀 Quick Start
 
@@ -56,13 +57,14 @@ claude-fork merge solution-found
 claude-fork <command> [options]
 
 Commands:
-  new [name]          Create a new fork
-  export [name]       Export context from current fork
-  list                List active forks and available exports
-  merge <name>        Import context from an export
-  clean [name]        Clean fork(s)
-  help                Show help message
-  version             Show version
+  new [name]              Create a new fork
+  export [name]           Export context from current fork (auto-generated with Claude)
+  export [name] --manual  Export with manual content entry
+  list                    List active forks and available exports
+  merge <name>            Import context from an export
+  clean [name]            Clean fork(s)
+  help                    Show help message
+  version                 Show version
 ```
 
 ### Slash Commands (Claude Code)
@@ -105,28 +107,21 @@ You're working in Claude Code on a feature implementation and want to explore mu
 ### 3. Export Successful Result
 In Fork B terminal:
 ```bash
-claude-fork export successful-solution
-# Enter your summary:
-Implementation B is the winner! 
+# 🤖 Automatic export (recommended) - Claude generates the summary
+/export successful-solution
 
-Key insights:
-- Uses efficient algorithm X instead of Y
-- Reduces memory usage by 50%
-- Handles edge cases better
-
-Code highlights:
-```js
-function optimizedSolution() {
-  // Implementation details...
-}
+# Claude automatically analyzes the conversation and creates:
+# - Summary of what was accomplished
+# - Key insights and technical decisions
+# - Performance comparisons
+# - Code highlights and recommendations
+# - Structured format ready for import
 ```
 
-Performance metrics:
-- 200ms vs 800ms response time
-- Works with datasets up to 1M records
-
-Recommendation: Go with approach B
-^D
+**Or manually if you prefer:**
+```bash
+claude-fork export successful-solution --manual
+# Then enter your custom content...
 ```
 
 ### 4. Import to Main Conversation
@@ -230,15 +225,33 @@ claude-fork clean  # Interactive cleanup of all forks
 
 ### Export Management
 
+**🤖 Automatic Export (Recommended):**
+```bash
+claude-fork export solution-found    # Claude AI generates summary automatically
+```
+
+**📝 Manual Export:**
+```bash
+claude-fork export test-case --manual    # Manual content entry
+```
+
 **View available exports:**
 ```bash
 ls ~/.claude-forks/exports/
+claude-fork list    # Shows exports with metadata
 ```
 
 **Manually edit exports:**
 ```bash
 $EDITOR ~/.claude-forks/exports/solution-found.md
 ```
+
+#### Export Features
+
+- **AI-Generated Content**: Claude analyzes your conversation and creates structured summaries
+- **Automatic Formatting**: Consistent markdown format with metadata
+- **Smart Fallback**: Template-based content if AI generation fails
+- **Manual Override**: Use `--manual` flag for custom content when needed
 
 ### Terminal Support
 

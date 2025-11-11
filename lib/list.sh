@@ -33,16 +33,27 @@ list_all() {
     if [[ -n "$exports" ]]; then
         echo "📦 Available Exports:"
         echo "---------------------"
-        echo "$exports" | while read -r export_file; do
+        
+        # Use a different approach to avoid pipe issues
+        while IFS= read -r export_file; do
+            if [[ -z "$export_file" ]]; then
+                continue
+            fi
+            
             local name metadata
             name=$(basename "$export_file" .md)
             
-            if [[ -f "$export_file" ]] && grep -q "^---$" "$export_file"; then
-                metadata=$(awk '/^---$/,/^---$/' "$export_file" | grep -E '^(exported_at|directory|fork_name):')
+            if [[ -f "$export_file" ]] && grep -q "^---$" "$export_file" 2>/dev/null; then
+                # Simple grep approach - more reliable across systems
                 local exported_at directory fork_name
-                exported_at=$(echo "$metadata" | grep "^exported_at:" | cut -d' ' -f2- || echo "unknown")
-                directory=$(echo "$metadata" | grep "^directory:" | cut -d' ' -f2- || echo "unknown")
-                fork_name=$(echo "$metadata" | grep "^fork_name:" | cut -d' ' -f2- || echo "unknown")
+                exported_at=$(grep "^exported_at:" "$export_file" | cut -d' ' -f2- | head -1)
+                directory=$(grep "^directory:" "$export_file" | cut -d' ' -f2- | head -1)
+                fork_name=$(grep "^fork_name:" "$export_file" | cut -d' ' -f2- | head -1)
+                
+                # Provide fallbacks
+                [[ -z "$exported_at" ]] && exported_at="unknown"
+                [[ -z "$directory" ]] && directory="unknown"
+                [[ -z "$fork_name" ]] && fork_name="unknown"
                 
                 echo "  📄 $name"
                 echo "     From fork: $fork_name"
@@ -54,7 +65,7 @@ list_all() {
                 echo "     File: $export_file"
                 echo ""
             fi
-        done
+        done <<< "$exports"
         has_content=true
     else
         echo "📦 Available Exports: (none)"

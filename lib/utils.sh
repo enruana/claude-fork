@@ -213,7 +213,9 @@ list_forks() {
 
 list_exports() {
     if [[ -d "$EXPORTS_DIR" ]]; then
-        find "$EXPORTS_DIR" -name "*.md" -type f 2>/dev/null | sort || echo ""
+        find "$EXPORTS_DIR" -name "*.md" -type f 2>/dev/null | sort || true
+    else
+        true
     fi
 }
 
@@ -269,28 +271,35 @@ Claude Fork v$VERSION - Manage conversation branches in Claude Code
 Usage: claude-fork <command> [options]
 
 Commands:
-  new [name]          Create a new fork (default command)
-  export [name]       Export result from current fork
-  list                List active forks and available exports
-  merge <name>        Import context from an export
-  clean [name]        Clean fork(s) - specific name or all if no name
-  help                Show this help message
-  version             Show version information
+  new [name]              Create a new fork (default command)
+  export [name]           Export result from current fork (auto-generated with Claude)
+  export [name] --manual  Export with manual content entry
+  list                    List active forks and available exports
+  merge <name>            Import context from an export
+  show <name> [action]    Display or open an export file
+  clean [name]            Clean fork(s) - specific name or all if no name
+  help                    Show this help message
+  version                 Show version information
 
 Examples:
   claude-fork new eval-option-1          Create named fork
   claude-fork new                        Create auto-named fork
-  claude-fork export solution-found      Export current context
+  claude-fork export solution-found      Auto-generate export with Claude
+  claude-fork export test --manual       Create export with manual input
   claude-fork list                       Show all forks and exports
+  claude-fork show solution-found        Display export content in terminal
+  claude-fork show solution-found code   Open export in VS Code
+  claude-fork show solution-found cursor Open export in Cursor
   claude-fork merge solution-found       Import exported context
   claude-fork clean eval-option-1        Remove specific fork
   claude-fork clean                      Remove all forks
 
-Slash Commands (for use in Claude Code):
-  /fork [name]        - Execute: claude-fork new [name]
-  /export [name]      - Execute: claude-fork export [name]
-  /merge <name>       - Execute: claude-fork merge <name>
-  /forks              - Execute: claude-fork list
+Slash Commands (for use in Claude Code - now with cf: prefix):
+  cf:fork [name]      - Execute: claude-fork new [name]
+  cf:export [name]    - Execute: claude-fork export [name]
+  cf:merge <name>     - Execute: claude-fork merge <name>
+  cf:forks            - Execute: claude-fork list
+  cf:show <name>      - Execute: claude-fork show <name>
 
 For more information, visit: https://github.com/enruana/claude-fork
 EOF
