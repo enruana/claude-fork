@@ -2,11 +2,24 @@
 
 set -euo pipefail
 
+# Determine the correct lib directory based on installation location
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$SCRIPT_DIR/lib"
 
-if [[ ! -f "$LIB_DIR/utils.sh" ]]; then
-    echo "Error: Cannot find utils.sh in $LIB_DIR" >&2
+# Check if we're running from development directory
+if [[ -f "$SCRIPT_DIR/lib/utils.sh" ]]; then
+    LIB_DIR="$SCRIPT_DIR/lib"
+# Check if we're running from installed location (~/.local/bin)
+elif [[ -f "$SCRIPT_DIR/../lib/claude-fork/utils.sh" ]]; then
+    LIB_DIR="$SCRIPT_DIR/../lib/claude-fork"
+# Check for system-wide installation
+elif [[ -f "/usr/local/lib/claude-fork/utils.sh" ]]; then
+    LIB_DIR="/usr/local/lib/claude-fork"
+else
+    echo "Error: Cannot find claude-fork library files" >&2
+    echo "Searched in:" >&2
+    echo "  $SCRIPT_DIR/lib/utils.sh" >&2
+    echo "  $SCRIPT_DIR/../lib/claude-fork/utils.sh" >&2
+    echo "  /usr/local/lib/claude-fork/utils.sh" >&2
     exit 1
 fi
 

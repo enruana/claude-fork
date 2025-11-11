@@ -202,6 +202,14 @@ test_installation() {
         log_fail "Binary not installed"
         return 1
     fi
+    
+    # Test that installed binary can find its libraries
+    if PATH="$TEST_PREFIX/bin:$PATH" "$TEST_PREFIX/bin/claude-fork" version >/dev/null 2>&1; then
+        log_pass "Installed binary can find libraries"
+    else
+        log_fail "Installed binary cannot find libraries"
+        return 1
+    fi
 }
 
 test_dependencies() {

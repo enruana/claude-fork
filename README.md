@@ -347,7 +347,8 @@ CLAUDE_FORK_DEBUG=1 claude-fork new test-fork
 
 ### Check Installation
 ```bash
-make info  # Show installation status
+make info                # Show installation status
+./verify-install.sh     # Comprehensive installation verification
 ```
 
 ## 📄 License
