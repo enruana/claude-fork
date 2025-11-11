@@ -126,7 +126,7 @@ open_terminal() {
 tell application "iTerm2"
     create window with default profile
     tell current session of current window
-        write text "cd \"$directory\" && claude --resume"
+        write text "cd \"$directory\" && claude --continue"
         set name to "Claude Fork: $fork_name"
     end tell
 end tell
@@ -135,7 +135,7 @@ EOF
                 terminal)
                     osascript <<EOF
 tell application "Terminal"
-    do script "cd \"$directory\" && claude --resume"
+    do script "cd \"$directory\" && claude --continue"
     set custom title of front window to "Claude Fork: $fork_name"
 end tell
 EOF
@@ -148,19 +148,19 @@ EOF
         linux)
             case "$terminal" in
                 gnome-terminal)
-                    gnome-terminal --title="Claude Fork: $fork_name" --working-directory="$directory" -- bash -c "claude --resume; exec bash"
+                    gnome-terminal --title="Claude Fork: $fork_name" --working-directory="$directory" -- bash -c "claude --continue; exec bash"
                     ;;
                 konsole)
-                    konsole --new-tab --workdir "$directory" --title "Claude Fork: $fork_name" -e bash -c "claude --resume; exec bash"
+                    konsole --new-tab --workdir "$directory" --title "Claude Fork: $fork_name" -e bash -c "claude --continue; exec bash"
                     ;;
                 xfce4-terminal)
-                    xfce4-terminal --title="Claude Fork: $fork_name" --working-directory="$directory" --command="bash -c 'claude --resume; exec bash'"
+                    xfce4-terminal --title="Claude Fork: $fork_name" --working-directory="$directory" --command="bash -c 'claude --continue; exec bash'"
                     ;;
                 tilix)
-                    tilix --new-window --working-directory="$directory" --title="Claude Fork: $fork_name" --command="bash -c 'claude --resume; exec bash'"
+                    tilix --new-window --working-directory="$directory" --title="Claude Fork: $fork_name" --command="bash -c 'claude --continue; exec bash'"
                     ;;
                 xterm)
-                    xterm -T "Claude Fork: $fork_name" -e "cd '$directory' && claude --resume; exec bash" &
+                    xterm -T "Claude Fork: $fork_name" -e "cd '$directory' && claude --continue; exec bash" &
                     ;;
                 *)
                     error_exit "Unsupported terminal on Linux: $terminal"
@@ -278,6 +278,8 @@ Commands:
   merge <name>            Import context from an export
   show <name> [action]    Display or open an export file
   clean [name]            Clean fork(s) - specific name or all if no name
+  clean-forks [name]      Clean active forks only
+  clean-exports [name]    Clean export files only
   help                    Show this help message
   version                 Show version information
 
@@ -293,13 +295,18 @@ Examples:
   claude-fork merge solution-found       Import exported context
   claude-fork clean eval-option-1        Remove specific fork
   claude-fork clean                      Remove all forks
+  claude-fork clean-forks my-fork        Clean specific fork only
+  claude-fork clean-forks                Interactive fork cleanup
+  claude-fork clean-exports old-export   Delete specific export
+  claude-fork clean-exports              Interactive export cleanup
 
 Slash Commands (for use in Claude Code - now with cf: prefix):
-  cf:fork [name]      - Execute: claude-fork new [name]
-  cf:export [name]    - Execute: claude-fork export [name]
-  cf:merge <name>     - Execute: claude-fork merge <name>
-  cf:forks            - Execute: claude-fork list
-  cf:show <name>      - Execute: claude-fork show <name>
+  cf:fork [name]         - Execute: claude-fork new [name]
+  cf:export [name]       - Execute: claude-fork export [name] (AI-powered)
+  cf:merge <name>        - Execute: claude-fork merge <name>
+  cf:forks               - Execute: claude-fork list
+  cf:show <name>         - Execute: claude-fork show <name>
+  cf:clean               - Show cleanup instructions and examples
 
 For more information, visit: https://github.com/enruana/claude-fork
 EOF

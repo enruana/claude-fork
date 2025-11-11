@@ -53,6 +53,14 @@ main() {
             shift
             exec "$LIB_DIR/clean.sh" "$@"
             ;;
+        clean-forks)
+            shift
+            exec "$LIB_DIR/clean-forks.sh" "$@"
+            ;;
+        clean-exports)
+            shift
+            exec "$LIB_DIR/clean-exports.sh" "$@"
+            ;;
         show)
             shift
             exec "$LIB_DIR/show.sh" "$@"
